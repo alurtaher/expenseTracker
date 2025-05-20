@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <button id="toggle-dark-mode">🌙 Toggle Dark Mode</button>
+    <h1>Basically it is a Expense Tracker</h1>
+    <form>
+        <label for="amount">Enter the Expense Amount:</label>
+        <input type="number" name="amount" id="amount" placeholder="Enter the amount">
+
+        <label for="description">Choose Description:</label>
+        <input type="text" name="description" id="description" placeholder="Enter Description how u spent the amount">
+
+        <label for="category">Choose a category:</label>
+        <select id="category" name="category">
+            <option value="entertainment">Entertainment</option>
+            <option value="food" selected>Food</option>
+            <option value="pop">Pop</option>
+            <option value="party">Party</option>
+        </select>
+
+        <button type="submit" id="submit" name="submit">Add Expense</button>
+    </form>
+    <script src="script.js"></script>
+</body>
+
+</html>
