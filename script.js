@@ -1,3 +1,4 @@
+//This project is build by A Taher Basha
 // Select form and inputs
 const form = document.querySelector("form");
 const amountInput = document.getElementById("amount");
