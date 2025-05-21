@@ -1,79 +1,65 @@
-//This project is build by A Taher Basha
-// Select form and inputs
-const form = document.querySelector("form");
+const form = document.getElementById("expense-form");
 const amountInput = document.getElementById("amount");
 const descriptionInput = document.getElementById("description");
 const categorySelect = document.getElementById("category");
+const expenseList = document.getElementById("expense-list");
 
-// Create a container to display expenses
-const expenseList = document.createElement("ul");
-document.body.appendChild(expenseList);
-
-// Function to load existing expenses from localStorage
+// Load existing expenses
 function loadExpenses() {
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-  expenses.forEach(expense => {
-    addExpenseToScreen(expense);
-  });
+  expenses.forEach(addExpenseToScreen);
 }
 
-// Function to add a single expense to the screen
 function addExpenseToScreen(expense) {
   const card = document.createElement("div");
-  card.className = "expense-card";
+  card.className = "card mb-3 expense-card shadow-sm";
+
+  const cardBody = document.createElement("div");
+  cardBody.className = "card-body d-flex justify-content-between align-items-center";
 
   const details = document.createElement("div");
-  details.className = "expense-details";
-
   details.innerHTML = `
-    <div class="expense-amount">₹ ${expense.amount}</div>
-    <div class="expense-desc">${expense.description}</div>
-    <div class="expense-category">${expense.category}</div>
+    <h5 class="card-title text-success">₹ ${expense.amount}</h5>
+    <p class="card-text mb-1">${expense.description}</p>
+    <span class="badge bg-secondary">${expense.category}</span>
   `;
 
-  // Action buttons
   const actions = document.createElement("div");
-  actions.className = "card-actions";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Delete";
-  deleteBtn.className = "delete-btn";
-  deleteBtn.addEventListener("click", () => {
-    card.remove();
-    deleteExpense(expense.id);
-  });
+  actions.className = "d-flex flex-column gap-2";
 
   const editBtn = document.createElement("button");
   editBtn.textContent = "Edit";
-  editBtn.className = "edit-btn";
-  editBtn.addEventListener("click", () => {
+  editBtn.className = "btn btn-warning btn-sm";
+  editBtn.onclick = () => {
     amountInput.value = expense.amount;
     descriptionInput.value = expense.description;
     categorySelect.value = expense.category;
 
     card.remove();
     deleteExpense(expense.id);
-  });
+  };
 
-  actions.appendChild(editBtn);
-  actions.appendChild(deleteBtn);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.className = "btn btn-danger btn-sm";
+  deleteBtn.onclick = () => {
+    card.remove();
+    deleteExpense(expense.id);
+  };
 
-  card.appendChild(details);
-  card.appendChild(actions);
-
-  expenseList.appendChild(card);
+  actions.append(editBtn, deleteBtn);
+  cardBody.append(details, actions);
+  card.append(cardBody);
+  expenseList.append(card);
 }
 
-
-// Function to delete expense from localStorage
 function deleteExpense(id) {
   let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
   expenses = expenses.filter(exp => exp.id !== id);
   localStorage.setItem("expenses", JSON.stringify(expenses));
 }
 
-// Handle form submission
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", e => {
   e.preventDefault();
 
   const amount = amountInput.value;
@@ -92,37 +78,23 @@ form.addEventListener("submit", (e) => {
     category
   };
 
-  // Add to localStorage
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
   expenses.push(expense);
   localStorage.setItem("expenses", JSON.stringify(expenses));
 
-  // Add to screen
   addExpenseToScreen(expense);
-
-  // Reset form
   form.reset();
 });
 
-// Load expenses on page load
-window.addEventListener("DOMContentLoaded", loadExpenses);
-
-const toggleButton = document.getElementById("toggle-dark-mode");
-
-toggleButton.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-
-  // Save preference in localStorage
-  if (document.body.classList.contains("dark-mode")) {
-    localStorage.setItem("theme", "dark");
-  } else {
-    localStorage.setItem("theme", "light");
-  }
-});
-
-// Load theme preference on page load
 window.addEventListener("DOMContentLoaded", () => {
+  loadExpenses();
+
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark-mode");
   }
+});
+
+document.getElementById("toggle-dark-mode").addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
 });
